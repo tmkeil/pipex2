@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:39:57 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 23:00:59 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 23:15:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,18 @@ void	ft_child1(char **argv, char **envp, int *fd)
 {
 	int		in;
 	int		tmp_out;
-	char	*path;
-	char	**cmds;
 
-	path = NULL;
 	tmp_out = dup(STDOUT_FILENO);
 	in = open(argv[1], O_RDONLY);
 	if (in == -1)
 		ft_error(BAD_FD, tmp_out);
-	if (dup2(in, STDIN_FILENO) == -1)
+	if (dup2(in, STDOUT_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
+    {
+        close(in);
+	    close(fd[0]);
+	    close(fd[1]);
         ft_error(BAD_FD, tmp_out);
-	if (dup2(fd[1], STDOUT_FILENO) == -1)
-        ft_error(BAD_FD, tmp_out);
+    }
 	close(in);
 	close(fd[0]);
 	close(fd[1]);
@@ -60,11 +60,14 @@ void	ft_child2(char **argv, char **envp, int *fd)
 	out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (out == -1)
 		ft_error(BAD_FD, STDOUT_FILENO);
-	if (dup2(fd[0], STDIN_FILENO) == -1)
+	if (dup2(fd[0], STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
+    {
+       	close(out);
+	    close(fd[0]);
+	    close(fd[1]);
         ft_error(BAD_FD, tmp_out);
-	if (dup2(out, STDOUT_FILENO) == -1)
-        ft_error(BAD_FD, tmp_out);
-	close(out);
+    }
+    close(out);
 	close(fd[0]);
 	close(fd[1]);
 	ft_execute(tmp_out, argv[3], envp);
