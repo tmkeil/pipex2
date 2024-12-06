@@ -41,8 +41,8 @@ void	ft_child1(char **argv, char **envp, int *fd)
 	if (dup2(in, STDOUT_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
     {
         close(in);
-	    close(fd[0]);
-	    close(fd[1]);
+	close(fd[0]);
+	close(fd[1]);
         ft_error(BAD_FD, tmp_out);
     }
 	close(in);
@@ -63,8 +63,8 @@ void	ft_child2(char **argv, char **envp, int *fd)
 	if (dup2(fd[0], STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
     {
        	close(out);
-	    close(fd[0]);
-	    close(fd[1]);
+	close(fd[0]);
+	close(fd[1]);
         ft_error(BAD_FD, tmp_out);
     }
     close(out);
