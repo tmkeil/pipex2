@@ -61,13 +61,13 @@ void	ft_child2(char **argv, char **envp, int *fd)
 	if (out == -1)
 		ft_error(BAD_FD, STDOUT_FILENO);
 	if (dup2(fd[0], STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
-    {
-       	close(out);
-	close(fd[0]);
-	close(fd[1]);
-        ft_error(BAD_FD, tmp_out);
-    }
-    close(out);
+    	{
+       		close(out);
+		close(fd[0]);
+		close(fd[1]);
+        	ft_error(BAD_FD, tmp_out);
+    	}
+    	close(out);
 	close(fd[0]);
 	close(fd[1]);
 	ft_execute(tmp_out, argv[3], envp);
@@ -75,7 +75,7 @@ void	ft_child2(char **argv, char **envp, int *fd)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		fd[2];
+	int	fd[2];
 	pid_t	pid1;
 	pid_t	pid2;
 
