@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:39:57 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 23:15:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 23:22:25 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	ft_child1(char **argv, char **envp, int *fd)
 	if (dup2(in, STDOUT_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
     {
         close(in);
-	close(fd[0]);
-	close(fd[1]);
+		close(fd[0]);
+		close(fd[1]);
         ft_error(BAD_FD, tmp_out);
     }
 	close(in);
@@ -61,13 +61,13 @@ void	ft_child2(char **argv, char **envp, int *fd)
 	if (out == -1)
 		ft_error(BAD_FD, STDOUT_FILENO);
 	if (dup2(fd[0], STDIN_FILENO) < 0 || dup2(out, STDOUT_FILENO) < 0)
-    	{
-       		close(out);
+    {
+		close(out);
 		close(fd[0]);
 		close(fd[1]);
-        	ft_error(BAD_FD, tmp_out);
-    	}
-    	close(out);
+		ft_error(BAD_FD, tmp_out);
+    }
+	close(out);
 	close(fd[0]);
 	close(fd[1]);
 	ft_execute(tmp_out, argv[3], envp);
