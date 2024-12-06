@@ -6,27 +6,84 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:39:57 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 20:38:30 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 21:48:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	main(int argc, char **argv)
+void	ft_parent(char **argv, char **envp, int *fd)
 {
-	if (argc < 2 || !*argv[1])
+	int		in;
+	char	*path;
+	char	**cmds;
+
+	in = open(argv[1], O_RDONLY);
+	if (in == -1)
+		ft_error(BAD_FD);
+	close(in);
+	if (dup2(in, STDIN_FILENO) < 0)
+        exit(0);
+	if (dup2(fd[1], STDOUT_FILENO) < 0)
+        exit(0);
+	cmds = ft_split(argv[2], ' ');
+	if (!cmds)
+		exit(0);
+	path = ft_getpath(cmds[0], envp);
+	if (execve(path, cmds, envp) == -1)
+		exit(0);
+}
+
+void	ft_child(char **argv, char **envp, int *fd)
+{
+	int		out;
+	char	*path;
+	char	**cmds;
+
+	out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (out == -1)
+		ft_error(BAD_FD);
+	close(out);
+	if (dup2(fd[0], STDIN_FILENO) < 0)
+        exit(0);
+	if (dup2(out, STDOUT_FILENO) < 0)
+        exit(0);
+	cmds = ft_split(argv[3], ' ');
+	if (!cmds)
+		exit(0);
+	path = ft_getpath(cmds[0], envp);
+	if (execve(path, cmds, envp) == -1)
+		exit(0);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	int		fd[2];
+	pid_t	id;
+
+	if (argc != 5 || !*argv[1])
 		return (1);
+	if (pipe(fd) == -1)
+		return (printf("couldn't pipe\n"), 1);
+	id = fork();
+	if (id == -1)
+		return (printf("couldn't fork\n"), 1);
+	if (id == 0)
+		ft_child(argv, envp, fd);
+	else
+		ft_parent(argv, envp, fd);
+	waitpid(id, NULL, 0);
 	return (0);
 }
 
-int main(int argc, char **argv, char **envp)
-{
-	(void)argc;
-	(void)argv;
-	char *p = ft_getpath("ls", envp);
-	printf("%s\n", p);
-	return (0);
-}
+// int main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	char *p = ft_getpath("ls", envp);
+// 	printf("%s\n", p);
+// 	return (0);
+// }
 
 // example: dup, dup2, open, close
 // int  main(void)
