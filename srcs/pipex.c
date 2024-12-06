@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:39:57 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 23:31:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 23:50:07 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	ft_child1(char **argv, char **envp, int *fd)
 	in = open(argv[1], O_RDONLY);
 	if (in == -1)
 		ft_error(BAD_FD, tmp_out);
-	if (dup2(in, STDOUT_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
+	if (dup2(in, STDIN_FILENO) < 0 || dup2(fd[1], STDOUT_FILENO) < 0)
     {
         close(in);
 		close(fd[0]);
