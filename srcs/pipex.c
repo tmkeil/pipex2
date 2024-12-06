@@ -6,13 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:39:57 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 23:22:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 23:24:29 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_execute(int std_out, char *argv, char **envp)
+static void	ft_execute(int std_out, char *argv, char **envp)
 {
 	char	*path;
 	char	**cmds;
@@ -29,7 +29,7 @@ void	ft_execute(int std_out, char *argv, char **envp)
 	}
 }
 
-void	ft_child1(char **argv, char **envp, int *fd)
+static void	ft_child1(char **argv, char **envp, int *fd)
 {
 	int		in;
 	int		tmp_out;
@@ -51,7 +51,7 @@ void	ft_child1(char **argv, char **envp, int *fd)
 	ft_execute(tmp_out, argv[2], envp);
 }
 
-void	ft_child2(char **argv, char **envp, int *fd)
+static void	ft_child2(char **argv, char **envp, int *fd)
 {
 	int		out;
 	int		tmp_out;
