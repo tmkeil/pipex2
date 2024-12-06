@@ -6,14 +6,15 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:43:03 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 21:48:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 22:45:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_error(int errno)
+void	ft_error(int errno, int fd)
 {
+	ft_putendl_fd(strerror(errno), fd);
 	exit(errno);
 }
 

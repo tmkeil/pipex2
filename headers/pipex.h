@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:40:24 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 21:48:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 22:45:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <string.h>
 
 void	ft_clr(char **ptr);
-void	ft_error(int errno);
+void	ft_error(int errno, int fd);
 char	*ft_getpath(char *cmd, char **envp);
 
 #endif
