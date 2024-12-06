@@ -6,11 +6,28 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:39:57 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/06 22:45:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/06 23:00:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	ft_execute(int std_out, char *argv, char **envp)
+{
+	char	*path;
+	char	**cmds;
+
+	cmds = ft_split(argv, ' ');
+	if (!cmds)
+		ft_error(BAD_ALLOCATION, std_out);
+	path = ft_getpath(cmds[0], envp);
+	if (!path || execve(path, cmds, envp) == -1)
+	{
+		free(path);
+		ft_clr(cmds);
+		ft_error(BAD_UNDEFINED, std_out);
+	}
+}
 
 void	ft_child1(char **argv, char **envp, int *fd)
 {
@@ -25,53 +42,32 @@ void	ft_child1(char **argv, char **envp, int *fd)
 	if (in == -1)
 		ft_error(BAD_FD, tmp_out);
 	if (dup2(in, STDIN_FILENO) == -1)
-        ft_error(BAD_FD, STDOUT_FILENO);
+        ft_error(BAD_FD, tmp_out);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
-        ft_error(BAD_FD, STDOUT_FILENO);
+        ft_error(BAD_FD, tmp_out);
 	close(in);
 	close(fd[0]);
 	close(fd[1]);
-	cmds = ft_split(argv[2], ' ');
-	if (!cmds)
-		ft_error(BAD_ALLOCATION, tmp_out);
-	path = ft_getpath(cmds[0], envp);
-	if (!path || execve(path, cmds, envp) == -1)
-	{
-		free(path);
-		ft_clr(cmds);
-		ft_error(BAD_UNDEFINED, tmp_out);
-	}
+	ft_execute(tmp_out, argv[2], envp);
 }
 
 void	ft_child2(char **argv, char **envp, int *fd)
 {
 	int		out;
 	int		tmp_out;
-	char	*path;
-	char	**cmds;
 
-	path = NULL;
 	tmp_out = dup(STDOUT_FILENO);
 	out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (out == -1)
-		ft_error(BAD_FD, tmp_out);
+		ft_error(BAD_FD, STDOUT_FILENO);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
-        ft_error(BAD_FD, STDOUT_FILENO);
+        ft_error(BAD_FD, tmp_out);
 	if (dup2(out, STDOUT_FILENO) == -1)
-        ft_error(BAD_FD, STDOUT_FILENO);
+        ft_error(BAD_FD, tmp_out);
 	close(out);
 	close(fd[0]);
 	close(fd[1]);
-	cmds = ft_split(argv[3], ' ');
-	if (!cmds)
-		ft_error(BAD_ALLOCATION, tmp_out);
-	path = ft_getpath(cmds[0], envp);
-	if (!path || execve(path, cmds, envp) == -1)
-	{
-		free(path);
-		ft_clr(cmds);
-		ft_error(BAD_UNDEFINED, tmp_out);
-	}
+	ft_execute(tmp_out, argv[3], envp);
 }
 
 int	main(int argc, char **argv, char **envp)
